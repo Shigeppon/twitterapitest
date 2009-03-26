@@ -7,10 +7,53 @@
 //
 
 #import "twitterAPITestViewController.h"
+#import "JSON/JSON.h"
 
 @implementation twitterAPITestViewController
 
+- (NSString *)getEscapedString:(NSString *)string
+{
+	CFStringRef tmp = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
+																			  kCFAllocatorDefault,
+																			  (CFStringRef)string,
+																			  CFSTR(""),
+																			  kCFStringEncodingUTF8);
+	
+	// 通常文字列 → %エスケープ (decode)
+	CFStringRef escapedStr = CFURLCreateStringByAddingPercentEscapes(
+																	 kCFAllocatorDefault,
+																	 tmp,
+																	 nil,
+																	 nil,
+																	 kCFStringEncodingUTF8);
+	return (NSString *)escapedStr;
+}
 
+- (IBAction)publicTimeline
+{
+	NSLog(@"public_timeline");
+	
+	NSString* format = @"json";
+	
+	NSString* url = [self getEscapedString:
+					 [NSString stringWithFormat:@"http://twitter.com/statuses/public_timeline.%@",format]];
+	
+	NSLog(url);
+	// 検索処理
+	NSString *jsonData = [[NSString alloc]  
+						  initWithContentsOfURL:[NSURL URLWithString:url]  
+						  encoding:NSUTF8StringEncoding error:nil];  
+	
+	if (jsonData == nil)
+	{
+		NSLog(@"error");
+		return;
+	} else {  
+		NSDictionary* jsonItem = [jsonData JSONValue]; 
+	}
+	
+	[jsonData release];
+}
 
 /*
 // The designated initializer. Override to perform setup that is required before the view is loaded.

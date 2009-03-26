@@ -12,5 +12,7 @@
 
 }
 
+- (IBAction)publicTimeline;
+
 @end
 
