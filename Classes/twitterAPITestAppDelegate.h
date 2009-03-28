@@ -11,12 +11,7 @@
 @class twitterAPITestViewController;
 
 @interface twitterAPITestAppDelegate : NSObject <UIApplicationDelegate> {
-    UIWindow *window;
-    twitterAPITestViewController *viewController;
 }
-
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet twitterAPITestViewController *viewController;
 
 @end
 
