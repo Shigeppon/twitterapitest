@@ -49,7 +49,23 @@
 		NSLog(@"error");
 		return;
 	} else {  
-		NSDictionary* jsonItem = [jsonData JSONValue]; 
+		id jsonItem = [jsonData JSONValue];
+		
+		if([jsonItem isKindOfClass:[NSArray class]])
+		{
+			NSLog(@"NSArray");
+			NSLog(@"count=%d",[jsonItem count]);
+			for(NSDictionary* data in jsonItem){
+				id user = [data objectForKey:@"user"];
+				id description = [user objectForKey:@"description"];
+				if([description isKindOfClass:[NSString class]])
+					NSLog(description);
+			}
+		}else if([jsonItem isKindOfClass:[NSDictionary class]]){
+			NSLog(@"NSDictionary");
+		}else{
+			NSLog(@"Other Class");
+		}
 	}
 	
 	[jsonData release];
