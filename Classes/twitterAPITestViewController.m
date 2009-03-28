@@ -11,6 +11,63 @@
 
 @implementation twitterAPITestViewController
 
+@synthesize apiList;
+
+//#define API_ARRAY [NSArray arrayWithObjects:@"public_timelines",nil]
+
+- (twitterAPITestViewController *) init
+{
+	if(self = [super init]) self.title = @"Twitter API's";
+	return self;
+}
+ 
+- (void) viewDidLoad
+{
+	[super viewDidLoad];
+	apiList = [NSMutableArray arrayWithObjects:
+			   @"public_timeline",
+			   @"hoge",
+			   @"fuga",
+			   nil];
+	[apiList retain];
+}
+
+#pragma mark UITableViewDataSource Methods
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+	return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+	//return 1;
+	//[UIApplication sharedApplication]
+	return [apiList count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"any-cell"];
+	if(cell == nil){
+		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"any-cell"] autorelease];
+	}
+	//cell.text = @"test";
+	cell.text = [apiList objectAtIndex:[indexPath row]];
+	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	NSLog(@"selected row = %d selected api = %@",[indexPath row],[apiList objectAtIndex:[indexPath row]]);
+	NSString *apiName = [apiList objectAtIndex:[indexPath row]];
+	if([self respondsToSelector:NSSelectorFromString(apiName)]){
+		[self performSelector:NSSelectorFromString(apiName)];
+	}else{
+		NSLog(@"api %@ is not recognize",apiName);
+	}
+}
+
 - (NSString *)getEscapedString:(NSString *)string
 {
 	CFStringRef tmp = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
@@ -29,7 +86,7 @@
 	return (NSString *)escapedStr;
 }
 
-- (IBAction)publicTimeline
+- (void)public_timeline
 {
 	NSLog(@"public_timeline");
 	
@@ -71,11 +128,12 @@
 	[jsonData release];
 }
 
+
 /*
- 
 - (void)loadView
 {
-	//NSLog(@"loadView");
+	apiArray = [NSArray arrayWithObjects:@"public_timelines",nil];
+	NSLog(@"loadView count=%d",[apiArray count]);
 }
 
 /*
@@ -119,6 +177,8 @@
 
 
 - (void)dealloc {
+	NSLog(@"apiList retain count = %d",[apiList retainCount]);
+	[apiList release];
     [super dealloc];
 }
 

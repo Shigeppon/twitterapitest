@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface twitterAPITestViewController : UIViewController {
-
+@interface twitterAPITestViewController : UITableViewController {
+	NSMutableArray *apiList;
 }
+
+@property (nonatomic,retain) NSMutableArray *apiList;
+
 
 - (IBAction)publicTimeline;
 
