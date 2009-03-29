@@ -7,7 +7,7 @@
 //
 
 #import "updateViewController.h"
-
+#import "ApplicationHelper.h"
 
 @implementation updateViewController
 
@@ -22,6 +22,30 @@
 - (IBAction)updateMessage
 {
 	NSLog(@"updateMessage %@",message.text);
+	
+	NSString* format = @"json";
+	
+	NSString* url = [ApplicationHelper getEscapedString:
+					 [NSString stringWithFormat:@"http://twitter.com/statuses/update.%@",format]];
+	
+	NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
+	
+	NSString *myRequestString = [NSString stringWithFormat:@"&status=%@",message.text];
+	NSData *myRequestData = [NSData dataWithBytes:[myRequestString UTF8String] length:[myRequestString length]];
+	[req setHTTPMethod:@"POST"];
+	[req setHTTPBody:myRequestData];
+	
+	NSURLResponse* response;
+	NSError* error;
+	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
+	
+	//NSLog([[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+	
+	// 検索処理
+	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	
+	NSLog(jsonData);
+	
 }
 
 /*
