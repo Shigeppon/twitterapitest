@@ -26,6 +26,12 @@
 	[super viewDidLoad];
 	apiList = [NSMutableArray arrayWithObjects:
 			   @"public_timeline",
+			   @"friends_timeline",
+			   @"user_timeline",
+			   @"show", 
+			   @"update", 
+			   @"replies", 
+			   @"destroy",
 			   @"hoge",
 			   @"fuga",
 			   nil];
@@ -84,6 +90,18 @@
 																	 nil,
 																	 kCFStringEncodingUTF8);
 	return (NSString *)escapedStr;
+}
+
+- (void)friends_timeline
+{
+	NSString* username = @"shigeo.sakamoto@gmail.com";
+	NSString* password = @"hoge1";
+	
+	NSData* data = [[NSString stringWithFormat:@"%@:%@", username, password]
+					dataUsingEncoding:NSASCIIStringEncoding];
+	NSString* base64Str = [data stringEncodedWithBase64];
+	
+	NSLog(base64Str);
 }
 
 - (void)public_timeline

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Base64EncDec.h"
 
 @interface twitterAPITestViewController : UITableViewController {
 	NSMutableArray *apiList;
