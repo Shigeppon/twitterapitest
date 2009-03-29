@@ -7,6 +7,7 @@
 //
 
 #import "twitterAPITestViewController.h"
+#import "updateViewController.h"
 #import "JSON/JSON.h"
 
 @implementation twitterAPITestViewController
@@ -74,34 +75,33 @@
 	}
 }
 
-- (NSString *)getEscapedString:(NSString *)string
+
+
+- (void)update
 {
-	CFStringRef tmp = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
-																			  kCFAllocatorDefault,
-																			  (CFStringRef)string,
-																			  CFSTR(""),
-																			  kCFStringEncodingUTF8);
-	
-	// 通常文字列 → %エスケープ (decode)
-	CFStringRef escapedStr = CFURLCreateStringByAddingPercentEscapes(
-																	 kCFAllocatorDefault,
-																	 tmp,
-																	 nil,
-																	 nil,
-																	 kCFStringEncodingUTF8);
-	return (NSString *)escapedStr;
+	[[self navigationController] pushViewController:[[updateViewController alloc] init] animated:YES];
 }
+
 
 - (void)friends_timeline
 {
-	NSString* username = @"shigeo.sakamoto@gmail.com";
-	NSString* password = @"hoge1";
+	NSString* format = @"json";
 	
-	NSData* data = [[NSString stringWithFormat:@"%@:%@", username, password]
-					dataUsingEncoding:NSASCIIStringEncoding];
-	NSString* base64Str = [data stringEncodedWithBase64];
+	NSString* url = [ApplicationHelper getEscapedString:
+					 [NSString stringWithFormat:@"http://twitter.com/statuses/friends_timeline.%@",format]];
 	
-	NSLog(base64Str);
+	NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
+	
+	NSURLResponse* response;
+	NSError* error;
+	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
+	
+	//NSLog([[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+	
+	// 検索処理
+	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	
+	NSLog(jsonData);
 }
 
 - (void)public_timeline
@@ -110,7 +110,7 @@
 	
 	NSString* format = @"json";
 	
-	NSString* url = [self getEscapedString:
+	NSString* url = [ApplicationHelper getEscapedString:
 					 [NSString stringWithFormat:@"http://twitter.com/statuses/public_timeline.%@",format]];
 	
 	NSLog(url);

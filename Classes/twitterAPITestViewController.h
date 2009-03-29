@@ -7,16 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Base64EncDec.h"
+#import "ApplicationHelper.h"
 
 @interface twitterAPITestViewController : UITableViewController {
 	NSMutableArray *apiList;
 }
 
 @property (nonatomic,retain) NSMutableArray *apiList;
-
-
-- (IBAction)publicTimeline;
 
 @end
 
