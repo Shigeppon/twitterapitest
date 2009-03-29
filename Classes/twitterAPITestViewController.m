@@ -7,6 +7,7 @@
 //
 
 #import "twitterAPITestViewController.h"
+#import "publicTimelineViewController.h"
 #import "updateViewController.h"
 #import "JSON/JSON.h"
 
@@ -107,7 +108,9 @@
 - (void)public_timeline
 {
 	NSLog(@"public_timeline");
+	[[self navigationController] pushViewController:[[publicTimelineViewController alloc] init] animated:YES];
 	
+	/*
 	NSString* format = @"json";
 	
 	NSString* url = [ApplicationHelper getEscapedString:
@@ -144,6 +147,7 @@
 	}
 	
 	[jsonData release];
+	 */
 }
 
 

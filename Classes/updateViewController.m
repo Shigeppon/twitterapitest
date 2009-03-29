@@ -22,6 +22,7 @@
 - (IBAction)updateMessage
 {
 	NSLog(@"updateMessage %@",message.text);
+	[message endEditing:YES];
 	
 	NSString* format = @"json";
 	
@@ -45,6 +46,8 @@
 	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	
 	NSLog(jsonData);
+	
+	[ApplicationHelper alertMessage:@"Message Send" message:@"Success"]; 
 	
 }
 
