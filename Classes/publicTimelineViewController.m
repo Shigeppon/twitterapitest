@@ -40,18 +40,21 @@
 			response = [[[NSMutableArray alloc] init] retain];
 			NSDictionary* userDictionary = [[NSDictionary alloc] init];
 			for(NSDictionary* data in jsonItem){
+				id text = [data objectForKey:@"text"];
 				id user = [data objectForKey:@"user"];
 				id description = [user objectForKey:@"description"];
 				id name = [user objectForKey:@"name"];
 				id profileImageUrl = [user objectForKey:@"profile_image_url"];
-				if([description isKindOfClass:[NSString class]])
+				if(![description isKindOfClass:[NSString class]])
 				{
-					NSArray *values = [NSArray arrayWithObjects:description,name,profileImageUrl,nil];
-					NSArray *keys = [NSArray arrayWithObjects:@"description",@"name",@"profile_image_url",nil];
-					userDictionary = [NSDictionary dictionaryWithObjects:values forKeys:keys];
-					[response addObject:userDictionary];
-					NSLog(description);
+					description = [NSString stringWithFormat:@""];
 				}
+				
+				NSArray *values = [NSArray arrayWithObjects:text,description,name,profileImageUrl,nil];
+				NSArray *keys = [NSArray arrayWithObjects:@"text",@"description",@"name",@"profile_image_url",nil];
+				userDictionary = [NSDictionary dictionaryWithObjects:values forKeys:keys];
+				[response addObject:userDictionary];
+				
 			}
 		}else if([jsonItem isKindOfClass:[NSDictionary class]]){
 			NSLog(@"NSDictionary");
@@ -81,7 +84,7 @@
 	if(cell == nil){
 		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"any-cell"] autorelease];
 	}
-	cell.text = [[response objectAtIndex:[indexPath row]] objectForKey:@"description"];
+	cell.text = [[response objectAtIndex:[indexPath row]] objectForKey:@"text"];
 	NSURL* imageUrl = [NSURL URLWithString: [[response objectAtIndex:[indexPath row]] objectForKey:@"profile_image_url"]];
 	NSData* imageData;
 	NSURLResponse* imageResponse;
