@@ -44,14 +44,14 @@
 				id user = [data objectForKey:@"user"];
 				id description = [user objectForKey:@"description"];
 				id name = [user objectForKey:@"name"];
-				id profileImageUrl = [user objectForKey:@"profile_image_url"];
+				id userid = [user objectForKey:@"id"];
 				if(![description isKindOfClass:[NSString class]])
 				{
 					description = [NSString stringWithFormat:@""];
 				}
 				
-				NSArray *values = [NSArray arrayWithObjects:text,description,name,profileImageUrl,nil];
-				NSArray *keys = [NSArray arrayWithObjects:@"text",@"description",@"name",@"profile_image_url",nil];
+				NSArray *values = [NSArray arrayWithObjects:text,description,name,userid,nil];
+				NSArray *keys = [NSArray arrayWithObjects:@"text",@"description",@"name",@"id",nil];
 				userDictionary = [NSDictionary dictionaryWithObjects:values forKeys:keys];
 				[response addObject:userDictionary];
 				
@@ -85,12 +85,45 @@
 		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"any-cell"] autorelease];
 	}
 	cell.text = [[response objectAtIndex:[indexPath row]] objectForKey:@"text"];
-	NSURL* imageUrl = [NSURL URLWithString: [[response objectAtIndex:[indexPath row]] objectForKey:@"profile_image_url"]];
-	NSData* imageData;
-	NSURLResponse* imageResponse;
-	NSError* imageError;
-	imageData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:imageUrl] returningResponse:&imageResponse error:&imageError];
-	cell.image = [UIImage imageWithData:imageData];
+	NSString* userid = [[response objectAtIndex:[indexPath row]] objectForKey:@"id"];
+	
+	NSString* format = @"json";
+	NSString* url = [NSString stringWithFormat:@"http://twitter.com/users/show/%@.%@",userid,format];
+	
+	NSLog(url);
+	
+	NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
+	
+	NSURLResponse* urlResponse;
+	NSError* error;
+	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
+	
+	// 検索処理
+	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	
+	//NSLog(jsonData);
+	
+	id profileImageUrl;
+	
+	if (jsonData == nil)
+	{
+		NSLog(@"error");
+	} else {  
+		id jsonItem = [jsonData JSONValue];
+		NSDictionary* data = jsonItem;
+		profileImageUrl = [data objectForKey:@"profile_image_url"];
+		NSLog(profileImageUrl);
+	}
+	
+	if(profileImageUrl){
+		NSURL* imageUrl = [NSURL URLWithString:profileImageUrl];
+		NSData* imageData;
+		NSURLResponse* imageResponse;
+		NSError* imageError;
+		imageData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:imageUrl] returningResponse:&imageResponse error:&imageError];
+		cell.image = [UIImage imageWithData:imageData];
+	}
+	
 	return cell;
 }
 
