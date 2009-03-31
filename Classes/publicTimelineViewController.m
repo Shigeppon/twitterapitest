@@ -9,7 +9,7 @@
 #import "publicTimelineViewController.h"
 #import "JSON/JSON.h"
 #import "ApplicationHelper.h"
-
+#import "GetImageDelegate.h"
 
 @implementation publicTimelineViewController
 
@@ -21,6 +21,7 @@
 					 [NSString stringWithFormat:@"http://twitter.com/statuses/public_timeline.%@",format]];
 	
 	NSLog(url);
+	
 	// 検索処理
 	NSString *jsonData = [[NSString alloc]  
 						  initWithContentsOfURL:[NSURL URLWithString:url]  
@@ -85,19 +86,25 @@
 		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"any-cell"] autorelease];
 	}
 	cell.text = [[response objectAtIndex:[indexPath row]] objectForKey:@"text"];
+	cell.image = [UIImage imageNamed:@"Argentina.gif"];
+	
 	NSString* userid = [[response objectAtIndex:[indexPath row]] objectForKey:@"id"];
 	
 	NSString* format = @"json";
 	NSString* url = [NSString stringWithFormat:@"http://twitter.com/users/show/%@.%@",userid,format];
+	//NSString* url = [NSString stringWithFormat:@"http://static.twitter.com/images/default_profile_normal.png"];
 	
 	NSLog(url);
 	
 	NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
+
+	//NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
 	
-	NSURLResponse* urlResponse;
-	NSError* error;
-	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
+	GetImageDelegate* getImageDelegate = [[GetImageDelegate alloc] init];
+	getImageDelegate.cell = cell;
 	
+	[NSURLConnection connectionWithRequest:req delegate:getImageDelegate];
+	/*
 	// 検索処理
 	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	
@@ -123,6 +130,7 @@
 		imageData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:imageUrl] returningResponse:&imageResponse error:&imageError];
 		cell.image = [UIImage imageWithData:imageData];
 	}
+	*/
 	
 	return cell;
 }
