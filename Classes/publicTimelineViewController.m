@@ -43,6 +43,7 @@
 			for(NSDictionary* data in jsonItem){
 				id text = [data objectForKey:@"text"];
 				id user = [data objectForKey:@"user"];
+				id profile_image_url = [user objectForKey:@"profile_image_url"];
 				id description = [user objectForKey:@"description"];
 				id name = [user objectForKey:@"name"];
 				id userid = [user objectForKey:@"id"];
@@ -51,8 +52,8 @@
 					description = [NSString stringWithFormat:@""];
 				}
 				
-				NSArray *values = [NSArray arrayWithObjects:text,description,name,userid,nil];
-				NSArray *keys = [NSArray arrayWithObjects:@"text",@"description",@"name",@"id",nil];
+				NSArray *values = [NSArray arrayWithObjects:text,profile_image_url,description,name,userid,nil];
+				NSArray *keys = [NSArray arrayWithObjects:@"text",@"profile_image_url",@"description",@"name",@"id",nil];
 				userDictionary = [NSDictionary dictionaryWithObjects:values forKeys:keys];
 				[response addObject:userDictionary];
 				
@@ -88,22 +89,25 @@
 	cell.text = [[response objectAtIndex:[indexPath row]] objectForKey:@"text"];
 	cell.image = [UIImage imageNamed:@"Argentina.gif"];
 	
-	NSString* userid = [[response objectAtIndex:[indexPath row]] objectForKey:@"id"];
+	//NSString* userid = [[response objectAtIndex:[indexPath row]] objectForKey:@"id"];
 	
-	NSString* format = @"json";
-	NSString* url = [NSString stringWithFormat:@"http://twitter.com/users/show/%@.%@",userid,format];
+	//NSString* format = @"json";
+	//NSString* url = [NSString stringWithFormat:@"http://twitter.com/users/show/%@.%@",userid,format];
 	//NSString* url = [NSString stringWithFormat:@"http://static.twitter.com/images/default_profile_normal.png"];
-	
+	NSString* url = [NSString stringWithFormat:[[response objectAtIndex:[indexPath row]] objectForKey:@"profile_image_url"]];
 	NSLog(url);
 	
 	NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
 
-	//NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
+	NSURLResponse* urlResponse;
+	NSError* error;
+	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
+	cell.image = [UIImage imageWithData:data];
 	
-	GetImageDelegate* getImageDelegate = [[GetImageDelegate alloc] init];
-	getImageDelegate.cell = cell;
+	//GetImageDelegate* getImageDelegate = [[GetImageDelegate alloc] init];
+	//getImageDelegate.cell = cell;
 	
-	[NSURLConnection connectionWithRequest:req delegate:getImageDelegate];
+	//[NSURLConnection connectionWithRequest:req delegate:getImageDelegate];
 	/*
 	// 検索処理
 	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
