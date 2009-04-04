@@ -1,33 +1,48 @@
 //
-//  publicTimelineViewController.m
+//  friendsTimelineViewController.m
 //  twitterAPITest
 //
-//  Created by Shigeo Sakamoto on 09/03/29.
+//  Created by Shigeo Sakamoto on 09/04/05.
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import "publicTimelineViewController.h"
-#import "JSON/JSON.h"
+#import "friendsTimelineViewController.h"
 #import "ApplicationHelper.h"
-#import "GetImageDelegate.h"
+#import "TimeLineViewCell.h"
+#import "JSON/JSON.h"
 
-@implementation publicTimelineViewController
 
-- (void)viewDidLoad
-{
-	[super viewDidLoad];
-	
-	NSString* format = @"json";
+@implementation friendsTimelineViewController
+
+/*
+- (id)initWithStyle:(UITableViewStyle)style {
+    // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+    if (self = [super initWithStyle:style]) {
+    }
+    return self;
+}
+*/
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    NSString* format = @"json";
 	
 	NSString* url = [ApplicationHelper getEscapedString:
-					 [NSString stringWithFormat:@"http://twitter.com/statuses/public_timeline.%@",format]];
+					 [NSString stringWithFormat:@"http://twitter.com/statuses/friends_timeline.%@",format]];
 	
 	NSLog(url);
 	
+	//認証が必要なリクエスト
+	NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
+	
+	NSURLResponse* urlResponse;
+	NSError* error;
+	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
+	
 	// 検索処理
-	NSString *jsonData = [[NSString alloc]  
-						  initWithContentsOfURL:[NSURL URLWithString:url]  
-						  encoding:NSUTF8StringEncoding error:nil];  
+	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	
 	if (jsonData == nil)
 	{
@@ -70,110 +85,90 @@
 	[jsonData release];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (void) modCell:(UITableViewCell*)aCell withText:(NSString *)text image:(UIImage *)image name:(NSString *)name
 {
-	return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-	NSLog(@"%d",[response count]);
-	return [response count];
+	//テキスト
+	CGRect tRect1 = CGRectMake(58.0f, 2.0f, 320.0f, 60.0f);
+	id title1 = [[UILabel alloc] initWithFrame:tRect1];
+	[title1 setText:text];
+	[title1 setTextAlignment:UITextAlignmentLeft];
 	
+	//イメージ
+	CGRect tRect2 = CGRectMake(2.0f, 2.0f, 56.0f, 56.0f);
+	id image1 = [[UIImageView alloc] initWithFrame:tRect2];
+	[image1 setImage:image];
+	
+	//名前
+	CGRect tRect3 = CGRectMake(58.0f, 2.0f, 320.0f, 20.0f);
+	id name1 = [[UILabel alloc] initWithFrame:tRect3];
+	[name1 setText:name];
+	[name1 setTextAlignment:UITextAlignmentLeft];
+	
+	//セルに追加する
+	[aCell addSubview:title1];
+	[aCell addSubview:image1];
+	[aCell addSubview:name1];
+	
+	[title1 release];
+	[image release];
+	[name1 release];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"any-cell"];
-	if(cell == nil){
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"any-cell"] autorelease];
+	TimeLineViewCell* cell = (TimeLineViewCell*)[tableView dequeueReusableCellWithIdentifier:@"any-cell"];
+	if(cell == nil)
+	{
+		UIViewController* viewController;
+		viewController = [[UIViewController alloc] initWithNibName:@"TimeLineViewCell" bundle:nil];
+		cell = (TimeLineViewCell*)viewController.view;
+		[viewController release];
 	}
-	cell.text = [[response objectAtIndex:[indexPath row]] objectForKey:@"text"];
-	cell.image = [UIImage imageNamed:@"Argentina.gif"];
 	
-	//NSString* userid = [[response objectAtIndex:[indexPath row]] objectForKey:@"id"];
-	
-	//NSString* format = @"json";
-	//NSString* url = [NSString stringWithFormat:@"http://twitter.com/users/show/%@.%@",userid,format];
-	//NSString* url = [NSString stringWithFormat:@"http://static.twitter.com/images/default_profile_normal.png"];
 	NSString* url = [NSString stringWithFormat:[[response objectAtIndex:[indexPath row]] objectForKey:@"profile_image_url"]];
-	NSLog(url);
-	
-	//NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
 	
 	NSURLRequest* req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-	
 	NSURLResponse* urlResponse;
 	NSError* error;
 	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
-	cell.image = [UIImage imageWithData:data];
 	
-	//GetImageDelegate* getImageDelegate = [[GetImageDelegate alloc] init];
-	//getImageDelegate.cell = cell;
+	[cell.nameLabel setText:[[response objectAtIndex:[indexPath row]] objectForKey:@"name"]];
+	[cell.textLabel setText:[[response objectAtIndex:[indexPath row]] objectForKey:@"text"]];
+	[cell.imageView setImage:[UIImage imageWithData:data]];
 	
-	//[NSURLConnection connectionWithRequest:req delegate:getImageDelegate];
+	
+	
+	
+	//[cell.imageView setImageView:[[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:@"Argentina.gif"]]];
+	
+	//cell.name.text = @"test";
+	
+	//name = @"test";
 	/*
-	// 検索処理
-	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	//cell.text = [[response objectAtIndex:[indexPath row]] objectForKey:@"text"];
 	
-	//NSLog(jsonData);
+	NSString* url = [NSString stringWithFormat:[[response objectAtIndex:[indexPath row]] objectForKey:@"profile_image_url"]];
 	
-	id profileImageUrl;
+	NSURLRequest* req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+	NSURLResponse* urlResponse;
+	NSError* error;
+	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:&error];
+	//cell.image = [UIImage imageWithData:data];
 	
-	if (jsonData == nil)
-	{
-		NSLog(@"error");
-	} else {  
-		id jsonItem = [jsonData JSONValue];
-		NSDictionary* data = jsonItem;
-		profileImageUrl = [data objectForKey:@"profile_image_url"];
-		NSLog(profileImageUrl);
-	}
 	
-	if(profileImageUrl){
-		NSURL* imageUrl = [NSURL URLWithString:profileImageUrl];
-		NSData* imageData;
-		NSURLResponse* imageResponse;
-		NSError* imageError;
-		imageData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:imageUrl] returningResponse:&imageResponse error:&imageError];
-		cell.image = [UIImage imageWithData:imageData];
-	}
-	*/
+	NSString* text = [[response objectAtIndex:[indexPath row]] objectForKey:@"text"];
+	NSString* name = [[response objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	UIImage* image = [UIImage imageWithData:data];
 	
+	[self modCell:cell withText:text image:image name:name];
+	 */
 	return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	/*
-	NSLog(@"selected row = %d selected api = %@",[indexPath row],[apiList objectAtIndex:[indexPath row]]);
-	NSString *apiName = [apiList objectAtIndex:[indexPath row]];
-	if([self respondsToSelector:NSSelectorFromString(apiName)]){
-		[self performSelector:NSSelectorFromString(apiName)];
-	}else{
-		NSLog(@"api %@ is not recognize",apiName);
-	}
-	 */
+	return 60;
 }
-
-
-/*
-- (id)initWithStyle:(UITableViewStyle)style {
-    // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-    if (self = [super initWithStyle:style]) {
-    }
-    return self;
-}
-*/
-
-/*
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-*/
 
 /*
 - (void)viewWillAppear:(BOOL)animated {
@@ -196,7 +191,6 @@
 }
 */
 
-
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
@@ -209,10 +203,26 @@
     // Release anything that's not essential, such as cached data
 }
 
+#pragma mark Table view methods
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+
+// Customize the number of rows in the table view.
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [response count];
+}
 
 
 
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Navigation logic may go here. Create and push another view controller.
+	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
+	// [self.navigationController pushViewController:anotherViewController];
+	// [anotherViewController release];
+}
 
 
 /*
@@ -256,7 +266,6 @@
 
 
 - (void)dealloc {
-	[response release];
     [super dealloc];
 }
 

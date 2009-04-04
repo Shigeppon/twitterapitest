@@ -8,6 +8,7 @@
 
 #import "twitterAPITestViewController.h"
 #import "publicTimelineViewController.h"
+#import "friendsTimelineViewController.h"
 #import "updateViewController.h"
 #import "JSON/JSON.h"
 
@@ -86,23 +87,8 @@
 
 - (void)friends_timeline
 {
-	NSString* format = @"json";
-	
-	NSString* url = [ApplicationHelper getEscapedString:
-					 [NSString stringWithFormat:@"http://twitter.com/statuses/friends_timeline.%@",format]];
-	
-	NSMutableURLRequest* req = [ApplicationHelper setRequestHeader:url];
-	
-	NSURLResponse* response;
-	NSError* error;
-	NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
-	
-	//NSLog([[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-	
-	// 検索処理
-	NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	
-	NSLog(jsonData);
+	NSLog(@"friends_timeline");
+	[[self navigationController] pushViewController:[[friendsTimelineViewController alloc] init] animated:YES];
 }
 
 - (void)public_timeline
