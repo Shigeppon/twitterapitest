@@ -7,8 +7,8 @@
 //
 
 #import "twitterAPITestViewController.h"
-#import "publicTimelineViewController.h"
-#import "friendsTimelineViewController.h"
+
+#import "TimeLineViewController.h"
 #import "updateViewController.h"
 #import "JSON/JSON.h"
 
@@ -31,12 +31,9 @@
 			   @"public_timeline",
 			   @"friends_timeline",
 			   @"user_timeline",
-			   @"show", 
 			   @"update", 
 			   @"replies", 
 			   @"destroy",
-			   @"hoge",
-			   @"fuga",
 			   nil];
 	[apiList retain];
 }
@@ -88,52 +85,24 @@
 - (void)friends_timeline
 {
 	NSLog(@"friends_timeline");
-	[[self navigationController] pushViewController:[[friendsTimelineViewController alloc] init] animated:YES];
+	[[self navigationController] pushViewController:[[TimeLineViewController alloc] 
+													 initWithApiUrl:@"http://twitter.com/statuses/friends_timeline.json"] animated:YES];
 }
 
 - (void)public_timeline
 {
 	NSLog(@"public_timeline");
-	[[self navigationController] pushViewController:[[publicTimelineViewController alloc] init] animated:YES];
+	[[self navigationController] pushViewController:[[TimeLineViewController alloc] 
+													 initWithApiUrl:@"http://twitter.com/statuses/public_timeline.json"] animated:YES];
 	
-	/*
-	NSString* format = @"json";
+}
+
+- (void)user_timeline
+{
+	NSLog(@"user_timeline");
+	[[self navigationController] pushViewController:[[TimeLineViewController alloc] 
+													 initWithApiUrl:@"http://twitter.com/statuses/user_timeline.json"] animated:YES];
 	
-	NSString* url = [ApplicationHelper getEscapedString:
-					 [NSString stringWithFormat:@"http://twitter.com/statuses/public_timeline.%@",format]];
-	
-	NSLog(url);
-	// 検索処理
-	NSString *jsonData = [[NSString alloc]  
-						  initWithContentsOfURL:[NSURL URLWithString:url]  
-						  encoding:NSUTF8StringEncoding error:nil];  
-	
-	if (jsonData == nil)
-	{
-		NSLog(@"error");
-		return;
-	} else {  
-		id jsonItem = [jsonData JSONValue];
-		
-		if([jsonItem isKindOfClass:[NSArray class]])
-		{
-			NSLog(@"NSArray");
-			NSLog(@"count=%d",[jsonItem count]);
-			for(NSDictionary* data in jsonItem){
-				id user = [data objectForKey:@"user"];
-				id description = [user objectForKey:@"description"];
-				if([description isKindOfClass:[NSString class]])
-					NSLog(description);
-			}
-		}else if([jsonItem isKindOfClass:[NSDictionary class]]){
-			NSLog(@"NSDictionary");
-		}else{
-			NSLog(@"Other Class");
-		}
-	}
-	
-	[jsonData release];
-	 */
 }
 
 
