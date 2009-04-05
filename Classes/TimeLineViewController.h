@@ -14,6 +14,6 @@
 	NSString* apiUrl;
 }
 
-- (TimeLineViewController*)initWithApiUrl:(NSString*)aUrl;
+- (id)initWithApiUrl:(NSString*)aUrl;
 
 @end

@@ -9,15 +9,18 @@
 #import "TimeLineViewController.h"
 #import "ApplicationHelper.h"
 #import "TimeLineViewCell.h"
+#import "ShowViewController.h"
 #import "JSON/JSON.h"
 
 @implementation TimeLineViewController
 
-- (TimeLineViewController*)initWithApiUrl:(NSString*)aUrl
+- (id)initWithApiUrl:(NSString*)aUrl
 {
-	[super init];
-	apiUrl = aUrl;
-	[apiUrl retain];
+	if(self = [super init])
+	{
+		apiUrl = aUrl;
+		[apiUrl retain];
+	}
 	return self;
 }
 
@@ -48,6 +51,7 @@
 			response = [[[NSMutableArray alloc] init] retain];
 			NSDictionary* userDictionary = [[NSDictionary alloc] init];
 			for(NSDictionary* data in jsonItem){
+				id statusId = [data objectForKey:@"id"];
 				id text = [data objectForKey:@"text"];
 				id user = [data objectForKey:@"user"];
 				id profile_image_url = [user objectForKey:@"profile_image_url"];
@@ -59,8 +63,8 @@
 					description = [NSString stringWithFormat:@""];
 				}
 				
-				NSArray *values = [NSArray arrayWithObjects:text,profile_image_url,description,name,userid,nil];
-				NSArray *keys = [NSArray arrayWithObjects:@"text",@"profile_image_url",@"description",@"name",@"id",nil];
+				NSArray *values = [NSArray arrayWithObjects:statusId,text,profile_image_url,description,name,userid,nil];
+				NSArray *keys = [NSArray arrayWithObjects:@"statusId",@"text",@"profile_image_url",@"description",@"name",@"id",nil];
 				userDictionary = [NSDictionary dictionaryWithObjects:values forKeys:keys];
 				[response addObject:userDictionary];
 				
@@ -99,6 +103,25 @@
 	[cell.imageView setImage:[UIImage imageWithData:data]];
 	
 	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	TimeLineViewCell* cell = (TimeLineViewCell*)[tableView cellForRowAtIndexPath:indexPath];
+	
+	/*
+	[[self navigationController] pushViewController:[[ShowViewController alloc] 
+													 initWithName:[[response objectAtIndex:[indexPath row]] objectForKey:@"name"]
+													 Text:[[response objectAtIndex:[indexPath row]] objectForKey:@"text"]
+													 ProfileImage:[UIImage imageNamed:@"Argentina.gif"]]
+										   animated:YES];
+	 */
+	[[self navigationController] pushViewController:[[ShowViewController alloc]
+													 initWithName:[cell.nameLabel text]
+													 Text:[cell.textLabel text]
+													 ProfileImage:[cell.imageView image]
+													 StatusId:[[[response objectAtIndex:[indexPath row]] objectForKey:@"statusId"] intValue]]
+													 animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -189,12 +212,6 @@
 */
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
-	// [self.navigationController pushViewController:anotherViewController];
-	// [anotherViewController release];
-}
 
 
 /*

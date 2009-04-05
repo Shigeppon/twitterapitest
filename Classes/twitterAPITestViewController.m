@@ -33,7 +33,6 @@
 			   @"user_timeline",
 			   @"update", 
 			   @"replies", 
-			   @"destroy",
 			   nil];
 	[apiList retain];
 }
@@ -105,6 +104,12 @@
 	
 }
 
+- (void)replies
+{
+	NSLog(@"replies");
+	[[self navigationController] pushViewController:[[TimeLineViewController alloc] 
+													 initWithApiUrl:@"http://twitter.com/statuses/replies.json"] animated:YES];	
+}
 
 /*
 - (void)loadView

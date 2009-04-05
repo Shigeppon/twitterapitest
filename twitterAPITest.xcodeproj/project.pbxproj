@@ -18,6 +18,8 @@
 		8DA2EB520F825CAD009361FD /* GetImageDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA2EB510F825CAD009361FD /* GetImageDelegate.m */; };
 		8DA2EBAF0F82630A009361FD /* Argentina.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8DA2EBAE0F82630A009361FD /* Argentina.gif */; };
 		8DAF74980F88D59700B2B044 /* TimeLineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAF74970F88D59700B2B044 /* TimeLineViewController.m */; };
+		8DAF75150F88E74E00B2B044 /* ShowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DAF75140F88E74E00B2B044 /* ShowView.xib */; };
+		8DAF751E0F88E85D00B2B044 /* ShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAF751D0F88E85D00B2B044 /* ShowViewController.m */; };
 		8DB084130F7F27C600A6388B /* Base64EncDec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB084120F7F27C600A6388B /* Base64EncDec.m */; };
 		8DB084620F7F4BD400A6388B /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8DB084610F7F4BD400A6388B /* Settings.bundle */; };
 		8DB9345B0F7F804B001162B7 /* updateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB9345A0F7F804B001162B7 /* updateViewController.m */; };
@@ -45,6 +47,9 @@
 		8DA2EBAE0F82630A009361FD /* Argentina.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Argentina.gif; sourceTree = "<group>"; };
 		8DAF74960F88D59700B2B044 /* TimeLineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLineViewController.h; sourceTree = "<group>"; };
 		8DAF74970F88D59700B2B044 /* TimeLineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLineViewController.m; sourceTree = "<group>"; };
+		8DAF75140F88E74E00B2B044 /* ShowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ShowView.xib; path = Classes/ShowView.xib; sourceTree = "<group>"; };
+		8DAF751C0F88E85D00B2B044 /* ShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowViewController.h; sourceTree = "<group>"; };
+		8DAF751D0F88E85D00B2B044 /* ShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowViewController.m; sourceTree = "<group>"; };
 		8DB084110F7F27C600A6388B /* Base64EncDec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64EncDec.h; sourceTree = "<group>"; };
 		8DB084120F7F27C600A6388B /* Base64EncDec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64EncDec.m; sourceTree = "<group>"; };
 		8DB084610F7F4BD400A6388B /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -88,6 +93,8 @@
 				8D7B97C80F87C0280041AA9F /* TimeLineViewCell.m */,
 				8DAF74960F88D59700B2B044 /* TimeLineViewController.h */,
 				8DAF74970F88D59700B2B044 /* TimeLineViewController.m */,
+				8DAF751C0F88E85D00B2B044 /* ShowViewController.h */,
+				8DAF751D0F88E85D00B2B044 /* ShowViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -110,6 +117,7 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				8DB934990F7FA40E001162B7 /* updateView.xib */,
+				8DAF75140F88E74E00B2B044 /* ShowView.xib */,
 				8D7B97D00F87C0560041AA9F /* TimeLineViewCell.xib */,
 			);
 			name = CustomTemplate;
@@ -189,6 +197,7 @@
 				8DB9349A0F7FA40E001162B7 /* updateView.xib in Resources */,
 				8DA2EBAF0F82630A009361FD /* Argentina.gif in Resources */,
 				8D7B97D10F87C0560041AA9F /* TimeLineViewCell.xib in Resources */,
+				8DAF75150F88E74E00B2B044 /* ShowView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +217,7 @@
 				8DA2EB520F825CAD009361FD /* GetImageDelegate.m in Sources */,
 				8D7B97C90F87C0280041AA9F /* TimeLineViewCell.m in Sources */,
 				8DAF74980F88D59700B2B044 /* TimeLineViewController.m in Sources */,
+				8DAF751E0F88E85D00B2B044 /* ShowViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
